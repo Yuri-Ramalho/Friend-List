@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+  <!-- Referência ao script read.js -->
+  <script src="read.js"></script>
+  <!-- Referência ao script delete.js -->
+  <script src="delete.js"></script>
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Friend List</h1>
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <a href="index.html" class="btn btn-secondary mb-2">Voltar</a>
+        <ul id="friendList" class="list-group mt-4"></ul>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+        <h2 class="text-center">Friend Details</h2>
+        <div id="friendDetails" class="mb-3"></div>
+        <!-- Botão para editar informações -->
+        <button id="editButton" class="btn btn-primary btn-block" onclick="goToEditPage()">Editar Informações</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Parse
+    Parse.initialize("cLrTfs8dFgdYupCbSPsy6rIO3RB3Gkdjpslyxme8", "OfJ5xxfwc55oQMHgWRA2U5MyH1qoe0o7nWtzt40p");
+    Parse.serverURL = "https://parseapi.back4app.com/";
+
+    function listFriends() {
+      const Amigo = Parse.Object.extend("Amigo");
+      const query = new Parse.Query(Amigo);
+
+      query.find().then(function (results) {
+        const friendList = document.getElementById("friendList");
+        friendList.innerHTML = "";
+
+        results.forEach(function (friend) {
+          const nome = friend.get("nome");
+          const sobrenome = friend.get("sobrenome");
+          const objectId = friend.id;
+
+          const listItem = document.createElement("li");
+          listItem.className = "list-group-item";
+
+          // Adicione um botão para ler informações do amigo
+          listItem.innerHTML = `${nome} ${sobrenome} 
+            <button class="btn btn-primary btn-sm float-right" onclick="readFriend('${objectId}')">Ver Info</button> 
+            <button class="btn btn-danger btn-sm float-right" onclick="deleteFriend('${objectId}')">Excluir</button>`;
+
+          friendList.appendChild(listItem);
+        });
+      }).catch(function (error) {
+        alert("Erro: " + error.message);
+      });
+    }
+
+    function displayFriendDetails(details) {
+      const friendDetails = document.getElementById("friendDetails");
+      friendDetails.innerHTML = details;
+    }
+
+    // Redireciona para a página de edição (edit.html)
+    function goToEditPage() {
+      window.location.href = "edit.html";
+    }
+
+    listFriends();
+  </script>
+</body>
+
+</html>

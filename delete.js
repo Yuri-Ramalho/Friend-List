@@ -1,21 +1,17 @@
-document.getElementById("deleteFriend").addEventListener("click", function() {
-  const objectId = document.getElementById("objectId").value; // Preencha com o objectId do amigo que deseja excluir
+function deleteFriend(objectId) {
   const Amigo = Parse.Object.extend("Amigo");
   const query = new Parse.Query(Amigo);
 
-  // Encontre o amigo pelo objectId
+  // Fetch the friend object to delete
   query.get(objectId).then(function(friend) {
-    if (friend) {
-      // Exclua o amigo
-      friend.destroy().then(function() {
-        alert("Amigo excluído com sucesso!");
-      }).catch(function(error) {
-        alert("Erro ao excluir amigo: " + error.message);
-      });
-    } else {
-      alert("Amigo não encontrado");
-    }
+    friend.destroy().then(function() {
+      alert("Amigo excluído com sucesso!");
+      // Refresh the friend list after deleting
+      listFriends();
+    }).catch(function(error) {
+      alert("Erro ao excluir amigo: " + error.message);
+    });
   }).catch(function(error) {
-    alert("Erro ao buscar amigo: " + error.message);
+    alert("Erro: " + error.message);
   });
-});
+}

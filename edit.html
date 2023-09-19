@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
+  <!-- Referência ao script update.js -->
+  <script src="update.js"></script>
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Friend List</h1>
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <a href="index.html" class="btn btn-secondary mb-2">Voltar</a>
+        <ul id="friendList" class="list-group mt-4"></ul>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+        <h2 class="text-center">Friend Details</h2>
+        <!-- Formulário para edição de informações do amigo -->
+        <form id="editForm" style="display: none;">
+          <input type="hidden" id="editObjectId">
+          <div class="form-group">
+            <label for="editNome">Nome:</label>
+            <input type="text" class="form-control" id="editNome">
+          </div>
+          <div class="form-group">
+            <label for="editSobrenome">Sobrenome:</label>
+            <input type="text" class="form-control" id="editSobrenome">
+          </div>
+          <div class="form-group">
+            <label for="editTelefone">Telefone:</label>
+            <input type="text" class="form-control" id="editTelefone">
+          </div>
+          <div class="form-group">
+            <label for="editEmail">Email:</label>
+            <input type="email" class="form-control" id="editEmail">
+          </div>
+          <div class="form-group">
+            <label for="editDetalhes">Detalhes:</label>
+            <textarea class="form-control" id="editDetalhes" rows="3"></textarea>
+          </div>
+          <button type="button" class="btn btn-primary" onclick="saveFriendChanges()">Salvar Alterações</button>
+        </form>
+        <button id="editButton" class="btn btn-info btn-block" onclick="showEditForm()" style="display: none;">Editar
+          Informações</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Parse
+    Parse.initialize("cLrTfs8dFgdYupCbSPsy6rIO3RB3Gkdjpslyxme8", "OfJ5xxfwc55oQMHgWRA2U5MyH1qoe0o7nWtzt40p");
+    Parse.serverURL = "https://parseapi.back4app.com/";
+
+    let currentFriendObjectId = null;
+
+    function listFriends() {
+      const Amigo = Parse.Object.extend("Amigo");
+      const query = new Parse.Query(Amigo);
+
+      query.find().then(function (results) {
+        const friendList = document.getElementById("friendList");
+        friendList.innerHTML = "";
+
+        results.forEach(function (friend) {
+          const nome = friend.get("nome");
+          const sobrenome = friend.get("sobrenome");
+          const objectId = friend.id;
+
+          const listItem = document.createElement("li");
+          listItem.className = "list-group-item";
+
+          // Adicione um botão para ler informações do amigo
+          listItem.innerHTML = `${nome} ${sobrenome} 
+            <button class="btn btn-primary btn-sm float-right" onclick="readFriend('${objectId}')">Ver Info</button> 
+            <button class="btn btn-danger btn-sm float-right" onclick="deleteFriend('${objectId}')">Excluir</button>
+            <button class="btn btn-info btn-sm float-right" onclick="editFriendInfo('${objectId}')">Editar Informações</button>`;
+
+          friendList.appendChild(listItem);
+        });
+      }).catch(function (error) {
+        alert("Erro: " + error.message);
+      });
+    }
+
+    listFriends();
+
+    function editFriendInfo(objectId) {
+      currentFriendObjectId = objectId;
+      const Amigo = Parse.Object.extend("Amigo");
+      const query = new Parse.Query(Amigo);
+
+      // Encontre o amigo pelo objectId
+      query.get(objectId).then(function (friend) {
+        if (friend) {
+          // Preencha os campos com os dados atuais do amigo
+          document.getElementById("editObjectId").value = objectId;
+          document.getElementById("editNome").value = friend.get("nome");
+          document.getElementById("editSobrenome").value = friend.get("sobrenome");
+          document.getElementById("editTelefone").value = friend.get("telefone");
+          document.getElementById("editEmail").value = friend.get("email");
+          document.getElementById("editDetalhes").value = friend.get("detalhes");
+
+          // Exibir o formulário de edição
+          showEditForm();
+        } else {
+          alert("Amigo não encontrado");
+        }
+      }).catch(function (error) {
+        alert("Erro ao buscar amigo: " + error.message);
+      });
+    }
+
+    function showEditForm() {
+      const editForm = document.getElementById("editForm");
+      const editButton = document.getElementById("editButton");
+
+      if (editForm.style.display === "none") {
+        // Exibir o formulário de edição e ocultar o botão de edição
+        editForm.style.display = "block";
+        editButton.style.display = "none";
+      } else {
+        // Ocultar o formulário de edição e exibir o botão de edição
+        editForm.style.display = "none";
+        editButton.style.display = "block";
+      }
+    }
+
+    function saveFriendChanges() {
+      const objectId = document.getElementById("editObjectId").value;
+      const Amigo = Parse.Object.extend("Amigo");
+      const query = new Parse.Query(Amigo);
+
+      // Encontre o amigo pelo objectId
+      query.get(objectId).then(function (friend) {
+        if (friend) {
+          // Atualize as informações do amigo
+          friend.set("nome", document.getElementById("editNome").value);
+          friend.set("sobrenome", document.getElementById("editSobrenome").value);
+          friend.set("telefone", document.getElementById("editTelefone").value);
+          friend.set("email", document.getElementById("editEmail").value);
+          friend.set("detalhes", document.getElementById("editDetalhes").value);
+
+          // Salve as alterações
+          friend.save().then(function () {
+            alert("Amigo atualizado com sucesso!");
+            // Recarregue a lista de amigos após a edição
+            listFriends();
+            // Oculte o formulário de edição e exiba o botão de edição novamente
+            showEditForm();
+          }).catch(function (error) {
+            alert("Erro ao atualizar: " + error.message);
+          });
+        } else {
+          alert("Amigo não encontrado");
+        }
+      }).catch(function (error) {
+        alert("Erro ao buscar amigo: " + error.message);
+      });
+    }
+  </script>
+</body>
+
+</html>
