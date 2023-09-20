@@ -9,7 +9,6 @@ document.getElementById("createFriend").addEventListener("click", function() {
 
   amigo.save().then(function() {
     alert("Amigo criado com sucesso!");
-    // Redirecione para a página de lista de amigos após a criação bem-sucedida
     window.location.href = "list_friends.html";
   }).catch(function(error) {
     alert("Erro: " + error.message);

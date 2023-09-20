@@ -5,9 +5,7 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
-  <!-- Referência ao script read.js -->
   <script src="read.js"></script>
-  <!-- Referência ao script delete.js -->
   <script src="delete.js"></script>
   <style>
     .list-group-item:hover {
@@ -25,7 +23,6 @@
         <a href="edit.html" class="btn btn-primary mb-3">Editar Amigos</a>
         <a href="create.html" class="btn btn-success mb-3">Criar Amigos</a>
         <ul id="friendList" class="list-group">
-          <!-- Itens da lista de amigos serão adicionados aqui -->
         </ul>
       </div>
     </div>
@@ -34,7 +31,6 @@
         <div class="card">
           <h5 class="card-header text-center">Friend Details</h5>
           <div class="card-body" id="friendDetails">
-            <!-- Detalhes do amigo serão exibidos aqui -->
           </div>
         </div>
       </div>
@@ -42,7 +38,6 @@
   </div>
 
   <script>
-    // Initialize Parse
     Parse.initialize("cLrTfs8dFgdYupCbSPsy6rIO3RB3Gkdjpslyxme8", "OfJ5xxfwc55oQMHgWRA2U5MyH1qoe0o7nWtzt40p");
     Parse.serverURL = "https://parseapi.back4app.com/";
 
@@ -62,7 +57,6 @@
           const listItem = document.createElement("li");
           listItem.className = "list-group-item list-group-item-action";
 
-          // Adicione um botão para ler informações do amigo
           listItem.innerHTML = `
             <div class="d-flex justify-content-between align-items-center">
               <span>${nome} ${sobrenome}</span>
@@ -85,7 +79,6 @@
       friendDetails.innerHTML = details;
     }
 
-    // Redireciona para a página de edição (edit.html)
     function goToEditPage() {
       window.location.href = "edit.html";
     }
