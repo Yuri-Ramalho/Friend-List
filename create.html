@@ -2,31 +2,36 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
 </head>
 
 <body>
   <div class="container mt-5">
-    <h1 class="text-center">Friend List</h1>
+    <h1 class="text-center">Cadastro de Amigos</h1>
     <div class="row">
       <div class="col-md-6 offset-md-3">
         <form>
           <div class="form-group">
+            <label for="name">Nome:</label>
             <input id="name" type="text" class="form-control" placeholder="Nome">
           </div>
           <div class="form-group">
+            <label for="sobrenome">Sobrenome:</label>
             <input id="sobrenome" type="text" class="form-control" placeholder="Sobrenome">
           </div>
           <div class="form-group">
+            <label for="telefone">Telefone:</label>
             <input id="telefone" type="text" class="form-control" placeholder="Telefone">
           </div>
           <div class="form-group">
+            <label for="email">Email:</label>
             <input id="email" type="email" class="form-control" placeholder="Email">
           </div>
           <div class="form-group">
-            <input id="detalhes" type="text" class="form-control" placeholder="Detalhes do Amigo">
+            <label for="comentario">Comentário:</label>
+            <textarea id="comentario" class="form-control" rows="3" placeholder="Comentário"></textarea>
           </div>
           <button id="createFriend" class="btn btn-primary">Criar Amigo</button>
           <a href="index.html" class="btn btn-secondary">Voltar</a>
@@ -35,26 +40,12 @@
     </div>
   </div>
 
+  <!-- Referência ao arquivo create.js -->
+  <script src="create.js"></script>
   <script>
-    // Initialize Parse
+    // Inicialização do Parse
     Parse.initialize("cLrTfs8dFgdYupCbSPsy6rIO3RB3Gkdjpslyxme8", "OfJ5xxfwc55oQMHgWRA2U5MyH1qoe0o7nWtzt40p");
     Parse.serverURL = "https://parseapi.back4app.com/";
-
-    document.getElementById("createFriend").addEventListener("click", function () {
-      const Amigo = Parse.Object.extend("Amigo");
-      const amigo = new Amigo();
-      amigo.set("nome", document.getElementById("name").value);
-      amigo.set("sobrenome", document.getElementById("sobrenome").value);
-      amigo.set("telefone", document.getElementById("telefone").value);
-      amigo.set("email", document.getElementById("email").value);
-      amigo.set("detalhes", document.getElementById("detalhes").value);
-
-      amigo.save().then(function () {
-        alert("Amigo criado com sucesso!");
-      }).catch(function (error) {
-        alert("Erro: " + error.message);
-      });
-    });
   </script>
 </body>
 

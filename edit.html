@@ -6,14 +6,32 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
   <script src="update.js"></script>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .card {
+      margin-top: 20px;
+    }
+
+    .card-header {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-back {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 
 <body>
   <div class="container mt-5">
-    <h1 class="text-center">Friend List</h1>
+    <h1 class="text-center">Editar Amigos</h1>
     <div class="row">
       <div class="col-md-6 offset-md-3">
-        <a href="index.html" class="btn btn-secondary mb-2">Voltar</a>
+        <a href="index.html" class="btn btn-secondary btn-back">Voltar</a>
         <ul id="friendList" class="list-group mt-4"></ul>
       </div>
     </div>
@@ -40,10 +58,10 @@
             <input type="email" class="form-control" id="editEmail">
           </div>
           <div class="form-group">
-            <label for="editDetalhes">Detalhes:</label>
-            <textarea class="form-control" id="editDetalhes" rows="3"></textarea>
+            <label for="editComentario">Comentário:</label>
+            <textarea class="form-control" id="editComentario" rows="3"></textarea>
           </div>
-          <button type="button" class="btn btn-primary" onclick="saveFriendChanges()">Salvar Alterações</button>
+          <button type="button" class="btn btn-primary" onclick="updateFriend()">Salvar Alterações</button>
         </form>
         <button id="editButton" class="btn btn-info btn-block" onclick="showEditForm()" style="display: none;">Editar
           Informações</button>
@@ -75,7 +93,6 @@
           listItem.className = "list-group-item";
 
           listItem.innerHTML = `${nome} ${sobrenome} 
-
             <button class="btn btn-info btn-sm float-right" onclick="editFriendInfo('${objectId}')">Editar Informações</button>`;
 
           friendList.appendChild(listItem);
@@ -87,31 +104,6 @@
 
     listFriends();
 
-    function editFriendInfo(objectId) {
-      currentFriendObjectId = objectId;
-      const Amigo = Parse.Object.extend("Amigo");
-      const query = new Parse.Query(Amigo);
-
-
-      query.get(objectId).then(function (friend) {
-        if (friend) {
-
-          document.getElementById("editObjectId").value = objectId;
-          document.getElementById("editNome").value = friend.get("nome");
-          document.getElementById("editSobrenome").value = friend.get("sobrenome");
-          document.getElementById("editTelefone").value = friend.get("telefone");
-          document.getElementById("editEmail").value = friend.get("email");
-          document.getElementById("editDetalhes").value = friend.get("detalhes");
-
-
-          showEditForm();
-        } else {
-          alert("Amigo não encontrado");
-        }
-      }).catch(function (error) {
-        alert("Erro ao buscar amigo: " + error.message);
-      });
-    }
 
     function showEditForm() {
       const editForm = document.getElementById("editForm");
@@ -128,38 +120,6 @@
       }
     }
 
-    function saveFriendChanges() {
-      const objectId = document.getElementById("editObjectId").value;
-      const Amigo = Parse.Object.extend("Amigo");
-      const query = new Parse.Query(Amigo);
-
-
-      query.get(objectId).then(function (friend) {
-        if (friend) {
-
-          friend.set("nome", document.getElementById("editNome").value);
-          friend.set("sobrenome", document.getElementById("editSobrenome").value);
-          friend.set("telefone", document.getElementById("editTelefone").value);
-          friend.set("email", document.getElementById("editEmail").value);
-          friend.set("detalhes", document.getElementById("editDetalhes").value);
-
-
-          friend.save().then(function () {
-            alert("Amigo atualizado com sucesso!");
-
-            listFriends();
-
-            showEditForm();
-          }).catch(function (error) {
-            alert("Erro ao atualizar: " + error.message);
-          });
-        } else {
-          alert("Amigo não encontrado");
-        }
-      }).catch(function (error) {
-        alert("Erro ao buscar amigo: " + error.message);
-      });
-    }
   </script>
 </body>
 
