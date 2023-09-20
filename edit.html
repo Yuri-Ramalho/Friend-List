@@ -5,7 +5,6 @@
   <meta charset="utf-8" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script type="text/javascript" src="https://npmcdn.com/parse/dist/parse.min.js"></script>
-  <!-- Referência ao script update.js -->
   <script src="update.js"></script>
 </head>
 
@@ -75,10 +74,8 @@
           const listItem = document.createElement("li");
           listItem.className = "list-group-item";
 
-          // Adicione um botão para ler informações do amigo
           listItem.innerHTML = `${nome} ${sobrenome} 
-            <button class="btn btn-primary btn-sm float-right" onclick="readFriend('${objectId}')">Ver Info</button> 
-            <button class="btn btn-danger btn-sm float-right" onclick="deleteFriend('${objectId}')">Excluir</button>
+
             <button class="btn btn-info btn-sm float-right" onclick="editFriendInfo('${objectId}')">Editar Informações</button>`;
 
           friendList.appendChild(listItem);
@@ -95,10 +92,10 @@
       const Amigo = Parse.Object.extend("Amigo");
       const query = new Parse.Query(Amigo);
 
-      // Encontre o amigo pelo objectId
+
       query.get(objectId).then(function (friend) {
         if (friend) {
-          // Preencha os campos com os dados atuais do amigo
+
           document.getElementById("editObjectId").value = objectId;
           document.getElementById("editNome").value = friend.get("nome");
           document.getElementById("editSobrenome").value = friend.get("sobrenome");
@@ -106,7 +103,7 @@
           document.getElementById("editEmail").value = friend.get("email");
           document.getElementById("editDetalhes").value = friend.get("detalhes");
 
-          // Exibir o formulário de edição
+
           showEditForm();
         } else {
           alert("Amigo não encontrado");
@@ -121,11 +118,11 @@
       const editButton = document.getElementById("editButton");
 
       if (editForm.style.display === "none") {
-        // Exibir o formulário de edição e ocultar o botão de edição
+
         editForm.style.display = "block";
         editButton.style.display = "none";
       } else {
-        // Ocultar o formulário de edição e exibir o botão de edição
+
         editForm.style.display = "none";
         editButton.style.display = "block";
       }
@@ -136,22 +133,22 @@
       const Amigo = Parse.Object.extend("Amigo");
       const query = new Parse.Query(Amigo);
 
-      // Encontre o amigo pelo objectId
+
       query.get(objectId).then(function (friend) {
         if (friend) {
-          // Atualize as informações do amigo
+
           friend.set("nome", document.getElementById("editNome").value);
           friend.set("sobrenome", document.getElementById("editSobrenome").value);
           friend.set("telefone", document.getElementById("editTelefone").value);
           friend.set("email", document.getElementById("editEmail").value);
           friend.set("detalhes", document.getElementById("editDetalhes").value);
 
-          // Salve as alterações
+
           friend.save().then(function () {
             alert("Amigo atualizado com sucesso!");
-            // Recarregue a lista de amigos após a edição
+
             listFriends();
-            // Oculte o formulário de edição e exiba o botão de edição novamente
+
             showEditForm();
           }).catch(function (error) {
             alert("Erro ao atualizar: " + error.message);
